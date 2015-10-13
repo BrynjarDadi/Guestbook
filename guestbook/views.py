@@ -27,3 +27,20 @@ def entry(request, question_id):
     response = "You're looking at the results of question."
     return HttpResponse(response)
 """
+
+def palmi(request):
+    latest_question_list = Text.objects.order_by('-pub_date')[:50]
+    print (latest_question_list)
+    length = []
+    for i in latest_question_list:
+        length.append(len(i.guestbook_text))
+
+    context = {'latest_question_list': latest_question_list,
+        'length': length,
+    }
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        q = text(title_text=request.POST['titill'], pub_date=timezone.now(),guestbook_text=request.POST['txtArea'])
+        q.save()
+
+    return render(request, 'guestbook/palmi.html')
